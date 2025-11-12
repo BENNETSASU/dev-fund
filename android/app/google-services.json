@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427382481427",
+    "project_id": "dev-fund-c10dd",
+    "storage_bucket": "dev-fund-c10dd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427382481427:android:b660a9f7c64ba9aaae55e6",
+        "android_client_info": {
+          "package_name": "com.example.dev_fund"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbYAWvPcYfeiQ2hUyH1uugXvv40zg6S0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
