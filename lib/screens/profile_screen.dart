@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
-import '../widgets/info_tile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -12,105 +11,114 @@ class ProfileScreen extends StatelessWidget {
     final authController = Get.find<AuthController>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: const Color(0xFF2E7D32),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      backgroundColor: Colors.grey.shade100,
       body: Obx(() {
         final user = authController.user.value;
 
-        // ---- SAFETY GUARD ----
         if (user == null) {
           return const Center(child: CircularProgressIndicator());
         }
-        // ---------------------
 
         return SingleChildScrollView(
           child: Column(
             children: [
-              // === Header ===
+              // === Purple Header ===
               Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0xFF2E7D32), Color(0xFF1B5E20)],
+                    colors: [Color(0xFF4A148C), Color(0xFF6A1B9A)],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
-                      ),
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          user.email?[0].toUpperCase() ?? 'U',
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2E7D32),
+                child: SafeArea(
+                  bottom: false,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      // Profile Picture
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            user.email?[0].toUpperCase() ?? 'U',
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF4A148C),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      user.email ?? 'No email',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      const SizedBox(height: 16),
+                      // User Name/Email
+                      Text(
+                        user.displayName ?? user.email?.split('@')[0] ?? 'User',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                      const SizedBox(height: 4),
+                      Text(
+                        user.email ?? 'No email',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: user.emailVerified
-                            ? Colors.green.shade700
-                            : Colors.orange.shade700,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            user.emailVerified ? Icons.verified : Icons.warning,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            user.emailVerified ? 'Verified' : 'Not Verified',
-                            style: const TextStyle(
+                      const SizedBox(height: 12),
+                      // Verification Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: user.emailVerified
+                              ? Colors.green
+                              : Colors.orange,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              user.emailVerified
+                                  ? Icons.verified
+                                  : Icons.pending,
+                              size: 16,
                               color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 6),
+                            Text(
+                              user.emailVerified ? 'Verified' : 'Pending',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
+                      const SizedBox(height: 30),
+                    ],
+                  ),
                 ),
               ),
 
-              // === Content ===
+              // === Account Info Cards ===
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -123,49 +131,53 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
+
+                    // Info Card
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            InfoTile(
-                              label: 'Email',
-                              value: user.email ?? 'Not available',
-                            ),
-                            const Divider(),
-                            InfoTile(
-                              label: 'User ID',
-                              value: user.uid.length > 10
-                                  ? '${user.uid.substring(0, 10)}...'
-                                  : user.uid,
-                            ),
-                            const Divider(),
-                            InfoTile(
-                              label: 'Account Created',
-                              value: user.metadata.creationTime != null
-                                  ? _formatDate(user.metadata.creationTime!)
-                                  : 'N/A',
-                              copyable: false,
-                            ),
-                            const Divider(),
-                            InfoTile(
-                              label: 'Last Sign In',
-                              value: user.metadata.lastSignInTime != null
-                                  ? _formatDate(user.metadata.lastSignInTime!)
-                                  : 'N/A',
-                              copyable: false,
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          _buildInfoTile(
+                            icon: Icons.email_outlined,
+                            iconColor: Colors.blue,
+                            label: 'Email',
+                            value: user.email ?? 'Not available',
+                          ),
+                          Divider(height: 1, color: Colors.grey.shade200),
+                          _buildInfoTile(
+                            icon: Icons.badge_outlined,
+                            iconColor: Colors.purple,
+                            label: 'User ID',
+                            value: user.uid.length > 12
+                                ? '${user.uid.substring(0, 12)}...'
+                                : user.uid,
+                          ),
+                          Divider(height: 1, color: Colors.grey.shade200),
+                          _buildInfoTile(
+                            icon: Icons.calendar_today,
+                            iconColor: Colors.green,
+                            label: 'Member Since',
+                            value: user.metadata.creationTime != null
+                                ? _formatDate(user.metadata.creationTime!)
+                                : 'N/A',
+                          ),
+                        ],
                       ),
                     ),
+
                     const SizedBox(height: 24),
                     const Text(
-                      'Settings & Actions',
+                      'Quick Actions',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -173,125 +185,96 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(Icons.edit, color: Colors.blue),
-                            ),
-                            title: const Text('Edit Profile'),
-                            trailing: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                            ),
-                            onTap: () => Get.snackbar(
-                              'Coming Soon',
-                              'Profile editing will be available soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                            ),
+
+                    // Actions Grid
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: Icons.edit,
+                            label: 'Edit Profile',
+                            color: Colors.blue,
+                            onTap: () {
+                              Get.snackbar(
+                                'Coming Soon',
+                                'Profile editing will be available soon!',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.blue.shade100,
+                                colorText: Colors.blue.shade900,
+                                margin: EdgeInsets.all(16),
+                              );
+                            },
                           ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.orange.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.settings,
-                                color: Colors.orange,
-                              ),
-                            ),
-                            title: const Text('Settings'),
-                            trailing: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                            ),
-                            onTap: () => Get.snackbar(
-                              'Coming Soon',
-                              'Settings will be available soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                            ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: Icons.settings,
+                            label: 'Settings',
+                            color: Colors.orange,
+                            onTap: () {
+                              Get.snackbar(
+                                'Coming Soon',
+                                'Settings will be available soon!',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.orange.shade100,
+                                colorText: Colors.orange.shade900,
+                                margin: EdgeInsets.all(16),
+                              );
+                            },
                           ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.purple.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.help_outline,
-                                color: Colors.purple,
-                              ),
-                            ),
-                            title: const Text('Help & Support'),
-                            trailing: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                            ),
-                            onTap: () => Get.snackbar(
-                              'Coming Soon',
-                              'Help & Support will be available soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: Icons.help_outline,
+                            label: 'Help',
+                            color: Colors.purple,
+                            onTap: () {
+                              Get.snackbar(
+                                'Coming Soon',
+                                'Help & Support will be available soon!',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.purple.shade100,
+                                colorText: Colors.purple.shade900,
+                                margin: EdgeInsets.all(16),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: _buildActionCard(
+                            icon: Icons.security,
+                            label: 'Security',
+                            color: Colors.green,
+                            onTap: () {
+                              Get.snackbar(
+                                'Coming Soon',
+                                'Security settings will be available soon!',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.green.shade100,
+                                colorText: Colors.green.shade900,
+                                margin: EdgeInsets.all(16),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Logout Button
                     SizedBox(
                       width: double.infinity,
+                      height: 52,
                       child: ElevatedButton.icon(
-                        onPressed: () async {
-                          final confirm = await Get.dialog<bool>(
-                            AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              title: const Row(
-                                children: [
-                                  Icon(Icons.logout, color: Colors.red),
-                                  SizedBox(width: 12),
-                                  Text('Logout'),
-                                ],
-                              ),
-                              content: const Text(
-                                'Are you sure you want to logout?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Get.back(result: false),
-                                  child: const Text(
-                                    'Cancel',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => Get.back(result: true),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: const Text('Logout'),
-                                ),
-                              ],
-                            ),
-                          );
-                          if (confirm == true) await authController.signOut();
-                        },
+                        onPressed: () => _showLogoutDialog(authController),
                         icon: const Icon(Icons.logout),
                         label: const Text(
                           'Logout',
@@ -303,10 +286,10 @@ class ProfileScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(26),
                           ),
+                          elevation: 0,
                         ),
                       ),
                     ),
@@ -318,6 +301,136 @@ class ProfileScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildInfoTile({
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 28),
+            ),
+            SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(AuthController authController) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.logout, color: Colors.red),
+            SizedBox(width: 12),
+            Text('Logout'),
+          ],
+        ),
+        content: Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(Get.overlayContext!).pop(),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(Get.overlayContext!).pop();
+              await authController.signOut();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('Logout'),
+          ),
+        ],
+      ),
     );
   }
 

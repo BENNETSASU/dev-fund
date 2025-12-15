@@ -16,28 +16,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final OnboardingController _onboardingController = Get.find();
   int _currentPage = 0;
 
-  final List<Map<String, String>> _pages = [
+  final List<Map<String, dynamic>> _pages = [
     {
-      "title": "Save for Tomorrow",
-      "description": "Build a secure retirement with smart savings plans.",
-      "image": "assets/onboard1.png",
+      "title": "Finance Services",
+      "description":
+          "You can enjoy the seamless finance services Investment and Loan Management, Flexible Approval and Easy Withdrawals",
+      "icon": Icons.assessment_outlined,
     },
     {
-      "title": "Track Progress",
-      "description": "Monitor contributions and projected retirement income.",
-      "image": "assets/onboard2.png",
+      "title": "Fast & Reliable Finance Service",
+      "subtitle": "How it works",
+      "steps": [
+        "1. Apply",
+        "2. Get Approved",
+        "3. Set-up",
+        "4. Enroll Members",
+        "5. Manage Growth",
+      ],
+      "icon": Icons.phone_iphone,
     },
     {
-      "title": "Retire Confidently",
-      "description": "Achieve your dream retirement with expert guidance.",
-      "image": "assets/onboard3.png",
+      "title": "About Dev Fund",
+      "description":
+          "Dev Fund revolutionizes provident fund management with cutting-edge technology, providing seamless investment management, flexible withdrawals, and comprehensive loan services. Our platform empowers companies and their employees to build a secure financial future together.",
+      "icon": Icons.security_outlined,
     },
   ];
 
   void _completeOnboarding() {
-    // Mark onboarding as completed (like GMET)
     _onboardingController.completeOnboarding();
-    // Navigate to login
     Get.offAllNamed(AppRoutes.login);
   }
 
@@ -50,78 +57,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF2E7D32),
-              const Color(0xFF1B5E20),
-              const Color(0xFF4CAF50),
-            ],
-            stops: const [0.0, 0.5, 1.0],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (index) =>
-                      setState(() => _currentPage = index),
-                  itemCount: _pages.length,
-                  itemBuilder: (context, index) {
-                    return _buildOnboardingPage(_pages[index]);
-                  },
-                ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) =>
+                    setState(() => _currentPage = index),
+                itemCount: _pages.length,
+                itemBuilder: (context, index) {
+                  return _buildOnboardingPage(_pages[index], index);
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Skip Button
-                    TextButton(
-                      onPressed: _completeOnboarding,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text(
-                        "Skip",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-
-                    // Page Indicators
-                    Row(
-                      children: List.generate(
-                        _pages.length,
-                        (i) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: _currentPage == i ? 24 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: _currentPage == i
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Page Indicators
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _pages.length,
+                      (i) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentPage == i ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _currentPage == i
+                              ? Color(0xFF00BCD4)
+                              : Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
-
-                    // Next/Get Started Button
-                    ElevatedButton(
+                  ),
+                  const SizedBox(height: 20),
+                  // Next/Get Started Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
                       onPressed: () {
                         if (_currentPage == _pages.length - 1) {
                           _completeOnboarding();
@@ -133,15 +112,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF2E7D32),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
+                        backgroundColor: Color(0xFF00BCD4),
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(25),
                         ),
+                        elevation: 0,
                       ),
                       child: Text(
                         _currentPage == _pages.length - 1
@@ -149,71 +125,134 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             : "Next",
                         style: const TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildOnboardingPage(Map<String, String> data) {
+  Widget _buildOnboardingPage(Map<String, dynamic> data, int index) {
+    if (index == 1) {
+      // Special layout for "How it works" page
+      return Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Phone illustration
+            Container(
+              height: 280,
+              padding: EdgeInsets.all(40),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    data["icon"],
+                    size: 100,
+                    color: Color(0xFF00BCD4),
+                  ),
+                  SizedBox(height: 20),
+                  Icon(
+                    Icons.payment,
+                    size: 60,
+                    color: Color(0xFF00BCD4).withOpacity(0.7),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            // Title
+            Text(
+              data["title"],
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              data["subtitle"] ?? "",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            // Steps
+            ...List.generate(
+              data["steps"].length,
+              (i) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(
+                  data["steps"][i],
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Default layout for other pages
     return Padding(
       padding: const EdgeInsets.all(40),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Image with container background
+          // Icon container
           Container(
-            height: 300,
+            height: 280,
+            padding: EdgeInsets.all(50),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.grey.shade100,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                data["image"]!,
-                height: 300,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback icon if image not found
-                  return Icon(
-                    Icons.savings,
-                    size: 150,
-                    color: Colors.white.withOpacity(0.7),
-                  );
-                },
+            child: Center(
+              child: Icon(
+                data["icon"],
+                size: 120,
+                color: Color(0xFF00BCD4),
               ),
             ),
           ),
-          const SizedBox(height: 60),
-
+          const SizedBox(height: 40),
           // Title
           Text(
-            data["title"]!,
+            data["title"],
             style: const TextStyle(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.black87,
               height: 1.2,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 20),
-
+          const SizedBox(height: 16),
           // Description
           Text(
-            data["description"]!,
+            data["description"],
             style: TextStyle(
-              fontSize: 18,
-              color: Colors.white.withOpacity(0.9),
+              fontSize: 15,
+              color: Colors.grey.shade600,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -223,3 +262,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+                  

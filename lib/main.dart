@@ -1,5 +1,5 @@
 // ============================================
-// lib/main.dart - FINAL FIXED VERSION
+// lib/main.dart - UPDATED WITH PlanController
 // ============================================
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,8 @@ import 'routes/app_routes.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/onboarding_controller.dart';
 import 'controllers/contribution_controller.dart';
-import 'pages/main_scaffold.dart' as main_scaffold; // <-- for TabController
+import 'controllers/plan_controller.dart';
+import 'pages/main_scaffold.dart' as main_scaffold;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +36,9 @@ Future<void> main() async {
     // 4. **ALL** Controllers – put **once**, **permanent**
     Get.put(AuthController(), permanent: true);
     Get.put(OnboardingController(), permanent: true);
-    Get.put(main_scaffold.TabController(), permanent: true); // <-- NEW
-    Get.put(ContributionController(), permanent: true); // <-- NEW
+    Get.put(main_scaffold.TabController(), permanent: true);
+    Get.put(ContributionController(), permanent: true);
+    Get.put(PlanController(), permanent: true);
     print('Controllers initialized');
 
     await Future.delayed(const Duration(milliseconds: 300));
@@ -84,11 +86,11 @@ class RetireWiseApp extends StatelessWidget {
       title: 'RetireWise',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00BCD4)),
         useMaterial3: true,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF2E7D32),
+            backgroundColor: const Color(0xFF00BCD4),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(

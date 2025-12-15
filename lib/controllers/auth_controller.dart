@@ -460,4 +460,6 @@ class AuthController extends GetxController {
     print('🔧 AuthController disposed');
     super.onClose();
   }
+
+  Future<void> resetPassword(String trim) async {}
 }
